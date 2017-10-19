@@ -74,11 +74,11 @@
       }
       var createCamera = function() {
         if (navigator.getVRDisplays) {
-          camera = new BABYLON.WebVRFreeCamera("WebVRCamera", new BABYLON.Vector3(0, 2, 0), scene);
+          camera = new BABYLON.WebVRFreeCamera("WebVRCamera", new BABYLON.Vector3(140, 50, -20), scene);
         } else {
-          camera = new BABYLON.VRDeviceOrientationFreeCamera("WebVRCamera", new BABYLON.Vector3(0, 2, 0), scene);
+          camera = new BABYLON.VRDeviceOrientationFreeCamera("WebVRCamera", new BABYLON.Vector3(170, 50, -20), scene);
         }
-
+        camera.setTarget( new BABYLON.Vector3(0,21,0))
         // Touch or click the rendering canvas to enter VR Mode
         scene.onPointerDown = function() {
           scene.onPointerDown = undefined
