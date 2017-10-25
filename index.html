@@ -7,24 +7,34 @@
   <script src="http://cdn.babylonjs.com/babylon.max.js"></script>
   <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
   <script src="meshloader.js"></script>
+  <script src="leap.js"></script>
 
 
   <style>
     #canvas {
       width: 100%;
-      height: 100%;
+      height: 80%;
     }
+
+
   </style>
 </head>
 
 <body>
+<div id="info">
+    <h2>Dont Touch</h2>
+   <p >LeapJS Obj:</p><p id="leapobj"></p>
+
+</div>
   <canvas id="canvas"></canvas>
   <script>
     window.addEventListener('DOMContentLoaded', function() {
+    var leapobj = document.getElementById('leapobj');
+
       var scene;
       var canvas = document.getElementById('canvas');
       var engine = new BABYLON.Engine(canvas, true);
-
+      
       var createScene = function() {
 
         scene = new BABYLON.Scene(engine);
@@ -85,7 +95,36 @@
           camera.attachControl(canvas, true);
         };
       };
+
+
       var scene = createScene();
+
+var sphere = BABYLON.Mesh.CreateSphere("sphere", 10.0, 10.0, scene); 
+var material = new BABYLON.StandardMaterial("mat", scene);
+sphere.material = material;
+material.diffuseColor = new BABYLON.Color3(1.5, 0, 0);
+var alpha = 0;
+sphere.scaling.y = 1.5;
+sphere.position = new BABYLON.Vector3(-100, -100, -100);
+
+var controller = Leap.loop({enableGestures:true}, function (frame) {
+    if (frame.hands.length > 0) {
+       leapobj.innerText = frame.hands[0].palmPosition;
+       var rightHand = 0;
+       var leftHand = 0;
+       if (frame.hands[0].type == "right") {
+          rightHand = frame.hands[0];
+          var move = rightHand.palmPosition;
+          sphere.position.z = move[0];
+          sphere.position.y = move[1] - 30;
+          sphere.position.x = move[2];
+       }
+    }
+ }
+);
+
+
+
       engine.runRenderLoop(function() {
         scene.render();
       });
